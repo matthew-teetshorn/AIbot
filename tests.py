@@ -1,10 +1,12 @@
 from functions.get_files_info import get_files_info
 from functions.get_file_content import get_file_content
+from functions.write_file import write_file
 
 # One of the following should be True at a time, others False
 TEST_GET_FILES_INFO = False
-TEST_GET_FILE_CONTENT = True
+TEST_GET_FILE_CONTENT = False
 TEST_LOREM = False
+TEST_WRITE_FILE = True
 
 if TEST_GET_FILES_INFO:
     test_cases = [
@@ -57,3 +59,16 @@ if TEST_LOREM:
         print(f"length of file_content: {len(file_content)}")
         print(f"Contents of file: {file_path}")
         print(file_content)
+
+if TEST_WRITE_FILE:
+    test_cases = [
+        ("calculator", "lorem.txt", "wait, this isn't lorem ipsum"),
+        ("calculator", "pkg/morelorem.txt", "lorem ipsum dolor sit amet"),
+        ("calculator", "/tmp/tmp.txt", "this should not be allowed"),
+    ]
+
+    for case in test_cases:
+        working_directory, file_path, content = case
+        files_write_status = write_file(working_directory, file_path, content)
+
+        print(files_write_status)
