@@ -16,6 +16,7 @@ from functions.get_files_info import schema_get_files_info
 from functions.get_file_content import schema_get_file_content
 from functions.run_python_file import schema_run_python_file
 from functions.write_file import schema_write_file
+from functions.call_function import call_function
 
 def main():
     parser = argparse.ArgumentParser()
@@ -66,7 +67,14 @@ def main():
         print(f"Response tokens: {response.usage_metadata.candidates_token_count}")
     if response.function_calls != None:
         for fcall in response.function_calls:
-            print(f"Calling function: {fcall.name}({fcall.args})")
+            # print(f"Calling function: {fcall.name}({fcall.args})")
+            function_response = call_function(fcall, verbose=args.verbose)
+            try:
+                if args.verbose:
+                    print(f"-> {function_response.parts[0].function_response.response}")
+            except Exception as e:
+                raise Exception(f"Fatal error: no response received from {fcall.name}")
+
     else:
         print(response.text)
 
